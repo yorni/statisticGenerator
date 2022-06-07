@@ -170,7 +170,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   if (direction == "SHORT") {
     order.openPrice =
       price * (1 - param.distanceToLevel / 100) + param.minSymbolAmount;
-    if (order.openPrice > price) {
+    if (order.openPrice >= price) {
       order.openPrice = price - param.minSymbolAmount;
     }
     order.stopPrice = price * (1 + param.stopLoss / 100);
@@ -180,7 +180,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
     order.openPrice =
       price * (1 + param.distanceToLevel / 100) - param.minSymbolAmount;
 
-    if (order.openPrice < price) {
+    if (order.openPrice <= price) {
       order.openPrice = price + param.minSymbolAmount;
     }
 
