@@ -116,12 +116,13 @@ function checkAndOpenOrders(candle) {
   let sellSignal = false;
   let distanceToLevelAsks;
   let distanceToLevelBids;
-
-  if (longOpenPrice && !shortOpenPrice) {
-    createOrder(longOpenPrice, levelVolumeAsks, 0, candle, "LONG");
-  }
-  if (shortOpenPrice && !longOpenPrice) {
-    createOrder(shortOpenPrice, levelVolumeBids, 0, candle, "SHORT");
+  if (!order) {
+    if (longOpenPrice && !shortOpenPrice && longOpenPrice < candle.h) {
+      createOrder(longOpenPrice, levelVolumeAsks, 0, candle, "LONG");
+    }
+    if (shortOpenPrice && !longOpenPrice && shortOpenPrice > candle.l) {
+      createOrder(shortOpenPrice, levelVolumeBids, 0, candle, "SHORT");
+    }
   }
 
   if (!order) {
