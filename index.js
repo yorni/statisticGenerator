@@ -289,6 +289,7 @@ function closeOrder(time, closePrice) {
     }
   }
   console.log(
+    commonStatistics.profit,
     order.symbol,
     order.direction,
     order.openPrice,
@@ -304,8 +305,7 @@ function closeOrder(time, closePrice) {
     order.finishTime,
     order.dealTime,
     order.timeLevelExistsOnClose,
-    order.levelRemoved,
-    commonStatistics.profit
+    order.levelRemoved
   );
 
   order = undefined;
