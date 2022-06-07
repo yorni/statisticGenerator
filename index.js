@@ -165,7 +165,6 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   order.symbol = param.symbol;
   order.direction = direction;
   if (direction == "SHORT") {
-    return;
     order.openPrice =
       price * (1 - param.distanceToLevel / 100) + param.minSymbolAmount;
     order.stopPrice = price * (1 + param.stopLoss / 100);
