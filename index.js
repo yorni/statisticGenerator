@@ -119,9 +119,11 @@ function checkAndOpenOrders(candle) {
   if (!order) {
     if (longOpenPrice && !shortOpenPrice && longOpenPrice < candle.h) {
       createOrder(longOpenPrice, levelVolumeAsks, 0, candle, "LONG");
+      longOpenPrice = 0;
     }
     if (shortOpenPrice && !longOpenPrice && shortOpenPrice > candle.l) {
       createOrder(shortOpenPrice, levelVolumeBids, 0, candle, "SHORT");
+      shortOpenPrice = 0;
     }
   }
 
