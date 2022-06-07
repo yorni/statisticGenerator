@@ -311,7 +311,7 @@ function prepareLevels(candle) {
   removeUnexistingLevels(candle);
   arrayOfAsksLevels = [];
   arrayOfBidsLevels = [];
-  if (candle.c == 0) {
+  if (candle.c) {
     console.log(candle.c);
   }
   highestValue = candle.c * (1 + (param.takeProfit * 2) / 100);
@@ -321,6 +321,9 @@ function prepareLevels(candle) {
     processLevel(ask, asksLevelsHistory, candle.asks);
     if (candle.asks[ask] > param.minLevelValue && Number(ask) <= highestValue) {
       distanceToMarket = ((Number(ask) - candle.c) / Number(ask)) * 100;
+      if (distanceToMarket < 0) {
+        console.log(candle.c);
+      }
       arrayOfAsksLevels.push([ask, candle.asks[ask], distanceToMarket]);
     }
   });
@@ -329,7 +332,10 @@ function prepareLevels(candle) {
     processLevel(bid, bidsLevelsHistory, candle.bids);
     if (candle.bids[bid] > param.minLevelValue && Number(bid) >= lowestValue) {
       distanceToMarket = ((candle.c - Number(bid)) / candle.c) * 100;
-      console.log(distanceToMarket, candle.c, Number(bid));
+      if (distanceToMarket < 0) {
+        console.log(candle.c);
+      }
+      //console.log(distanceToMarket, candle.c, Number(bid));
       arrayOfBidsLevels.push([bid, candle.bids[bid], distanceToMarket]);
     }
   });
