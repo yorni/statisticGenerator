@@ -288,24 +288,24 @@ function closeOrder(time, closePrice) {
       commonStatistics.maxUnprofitCount = maxUnprofitCount;
     }
   }
-  // console.log(
-  //   order.symbol,
-  //   order.direction,
-  //   order.openPrice,
-  //   order.openLevel,
-  //   order.takePrice,
-  //   order.stopPrice,
-  //   order.closePrice,
-  //   order.profit,
-  //   order.timeLevelExistsOnOpen,
-  //   order.levelVolume,
-  //   order.distanceToLevel,
-  //   order.startTime,
-  //   order.finishTime,
-  //   order.dealTime,
-  //   order.timeLevelExistsOnClose,
-  //   order.levelRemoved
-  // );
+  console.log(
+    order.symbol,
+    order.direction,
+    order.openPrice,
+    order.openLevel,
+    order.takePrice,
+    order.stopPrice,
+    order.closePrice,
+    order.profit,
+    order.timeLevelExistsOnOpen,
+    order.levelVolume,
+    order.distanceToLevel,
+    order.startTime,
+    order.finishTime,
+    order.dealTime,
+    order.timeLevelExistsOnClose,
+    order.levelRemoved
+  );
 
   order = undefined;
 }
