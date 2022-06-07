@@ -22,25 +22,25 @@ function initParameters() {
     param.symbol = myArgs[0];
   }
   if (myArgs[1]) {
-    param.deposit = Number(myArgs[1]);
+    param.startTime = Number(myArgs[1]);
   }
   if (myArgs[2]) {
-    param.takeProfit = Number(myArgs[2]);
+    param.finishTime = Number(myArgs[2]);
   }
   if (myArgs[3]) {
-    param.stopLoss = Number(myArgs[3]);
+    param.takeProfit = Number(myArgs[3]);
   }
   if (myArgs[4]) {
-    param.distanceToLevel = Number(myArgs[4]);
+    param.stopLoss = Number(myArgs[4]);
   }
   if (myArgs[5]) {
-    param.minLevelValue = Number(myArgs[5]);
+    param.distanceToLevel = Number(myArgs[5]);
   }
   if (myArgs[6]) {
-    param.startTime = Number(myArgs[6]);
+    param.deposit = Number(myArgs[6]);
   }
   if (myArgs[7]) {
-    param.finishTime = Number(myArgs[7]);
+    param.minLevelValue = Number(myArgs[7]);
   }
   if (myArgs[8]) {
     param.minSymbolAmount = Number(myArgs[8]);
@@ -61,9 +61,7 @@ async function start() {
   initParameters();
   initCommonStatistics();
   for (let i = param.startTime; i < param.finishTime; i += 1000000) {
-    console.log("start", i);
     await findAndPocessCandles(i, i + 1000000);
-    console.log("stop", i);
   }
   console.log(commonStatistics);
   db.close();
@@ -71,7 +69,6 @@ async function start() {
 
 async function findAndPocessCandles(timeFrom, timeTo) {
   let candlesObject;
-  console.time("select");
   conditions = {
     ticker: param.symbol,
     time: {
@@ -79,7 +76,6 @@ async function findAndPocessCandles(timeFrom, timeTo) {
       $lte: timeTo,
     },
   };
-  console.log(conditions);
   try {
     candlesObject = await candleM
       .find(conditions)
@@ -87,7 +83,6 @@ async function findAndPocessCandles(timeFrom, timeTo) {
       .limit(0)
       .sort({ time: 1 })
       .lean();
-    console.log(candlesObject.length);
 
     if (candlesObject == null) {
       console.log("Can`t find candles in period", timeFrom, timeTo);
@@ -97,13 +92,10 @@ async function findAndPocessCandles(timeFrom, timeTo) {
     console.log("Error during candles search:", err.message);
     return;
   }
-  console.timeEnd("select");
-  console.time("another");
 
   candlesObject.forEach((candle) => {
     processCandle(candle);
   });
-  console.timeEnd("another");
 }
 function processCandle(candle) {
   prepareLevels(candle);
@@ -291,24 +283,24 @@ function closeOrder(time, closePrice) {
       commonStatistics.maxUnprofitCount = maxUnprofitCount;
     }
   }
-  // console.log(
-  //   order.symbol,
-  //   order.direction,
-  //   order.openPrice,
-  //   order.openLevel,
-  //   order.takePrice,
-  //   order.stopPrice,
-  //   order.closePrice,
-  //   order.profit,
-  //   order.timeLevelExistsOnOpen,
-  //   order.levelVolume,
-  //   order.distanceToLevel,
-  //   order.startTime,
-  //   order.finishTime,
-  //   order.dealTime,
-  //   order.timeLevelExistsOnClose,
-  //   order.levelRemoved
-  // );
+  console.log(
+    order.symbol,
+    order.direction,
+    order.openPrice,
+    order.openLevel,
+    order.takePrice,
+    order.stopPrice,
+    order.closePrice,
+    order.profit,
+    order.timeLevelExistsOnOpen,
+    order.levelVolume,
+    order.distanceToLevel,
+    order.startTime,
+    order.finishTime,
+    order.dealTime,
+    order.timeLevelExistsOnClose,
+    order.levelRemoved
+  );
 
   order = undefined;
 }
