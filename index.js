@@ -304,7 +304,8 @@ function closeOrder(time, closePrice) {
     order.finishTime,
     order.dealTime,
     order.timeLevelExistsOnClose,
-    order.levelRemoved
+    order.levelRemoved,
+    commonStatistics.profit
   );
 
   order = undefined;
