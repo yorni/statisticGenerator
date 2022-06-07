@@ -16,6 +16,11 @@ let arrayOfBidsLevels = []; //[[1.01,10,0.1],[1.011,11,0.11]]
 let maxUnprofitLongCount = 0;
 let maxUnprofitShortCount = 0;
 let maxUnprofitCount = 0;
+let longOpenPrice = 0;
+let shortOpenPrice = 0;
+let levelVolumeAsks;
+let levelVolumeBids;
+
 function initParameters() {
   var myArgs = process.argv.slice(2);
   if (myArgs[0]) {
@@ -111,13 +116,23 @@ function checkAndOpenOrders(candle) {
   let sellSignal = false;
   let distanceToLevelAsks;
   let distanceToLevelBids;
+
+  if (longOpenPrice && !shortOpenPrice) {
+    createOrder(longOpenPrice, levelVolumeAsks, 0, candle, "LONG");
+  }
+  if (shortOpenPrice && !longOpenPrice) {
+    createOrder(shortOpenPrice, levelVolumeBids, 0, candle, "SHORT");
+  }
+
   if (!order) {
     if (arrayOfAsksLevels.length) {
       priceAsks = arrayOfAsksLevels[0][0];
       levelVolumeAsks = arrayOfAsksLevels[0][1];
       distanceToLevelAsks = arrayOfAsksLevels[0][2];
       if (distanceToLevelAsks <= param.distanceToLevel) {
-        sellSignal = true;
+        longOpenPrice = priceAsks + param.minSymbolAmount;
+      } else {
+        longOpenPrice = 0;
       }
     }
     if (arrayOfBidsLevels.length) {
@@ -126,28 +141,10 @@ function checkAndOpenOrders(candle) {
       distanceToLevelBids = arrayOfBidsLevels[0][2];
       // console.log(candle.c, arrayOfBidsLevels);
       if (distanceToLevelBids <= param.distanceToLevel) {
-        buySignal = true;
-        //console.log(buySignal);
+        shortOpenPrice = priceBids - param.minSymbolAmount;
       }
-    }
-
-    if (sellSignal && !buySignal) {
-      createOrder(
-        priceAsks,
-        levelVolumeAsks,
-        distanceToLevelAsks,
-        candle,
-        "LONG"
-      );
-    }
-    if (buySignal && !sellSignal) {
-      createOrder(
-        priceBids,
-        levelVolumeBids,
-        distanceToLevelBids,
-        candle,
-        "SHORT"
-      );
+    } else {
+      shortOpenPrice = 0;
     }
   }
 }
@@ -173,7 +170,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
     // if (order.openPrice >= price) {
     //   order.openPrice = price - param.minSymbolAmount;
     // }
-    order.openPrice = price + param.minSymbolAmount;
+    order.openPrice = price;
 
     order.stopPrice = price * (1 + param.stopLoss / 100);
     order.takePrice = order.openPrice * (1 - param.takeProfit / 100);
@@ -185,7 +182,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
     // if (order.openPrice <= price) {
     //   order.openPrice = price + param.minSymbolAmount;
     // }
-    order.openPrice = price - param.minSymbolAmount;
+    order.openPrice = price;
 
     order.stopPrice = price * (1 - param.stopLoss / 100);
     order.takePrice = order.openPrice * (1 + param.takeProfit / 100);
