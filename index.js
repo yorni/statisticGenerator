@@ -121,8 +121,10 @@ function checkAndOpenOrders(candle) {
       priceBids = arrayOfBidsLevels[0][0];
       levelVolumeBids = arrayOfBidsLevels[0][1];
       distanceToLevelBids = arrayOfBidsLevels[0][2];
+      // console.log(candle.c, arrayOfBidsLevels);
       if (distanceToLevelBids <= param.distanceToLevel) {
         buySignal = true;
+        //console.log(buySignal);
       }
     }
 
@@ -222,9 +224,9 @@ function processActiveOrders(candle) {
       }
     } else {
       if (order.takePrice <= candle.h) {
-        closeLong(candle.time, order.takePrice);
+        closeOrder(candle.time, order.takePrice);
       } else if (order.stopPrice >= candle.l) {
-        closeLong(candle.time, order.stopPrice);
+        closeOrder(candle.time, order.stopPrice);
       }
     }
   }
@@ -323,7 +325,7 @@ function prepareLevels(candle) {
 
   Object.keys(candle.bids).forEach((bid) => {
     processLevel(bid, bidsLevelsHistory, candle.bids);
-    if (candle.bids[bid] > param.minLevelValue && Number(bid) <= lowestValue) {
+    if (candle.bids[bid] > param.minLevelValue && Number(bid) >= lowestValue) {
       distanceToMarket = ((candle.c - Number(bid)) / candle.c) * 100;
       arrayOfBidsLevels.push([bid, candle.bids[bid], distanceToMarket]);
     }
