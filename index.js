@@ -322,7 +322,7 @@ function prepareLevels(candle) {
     if (candle.asks[ask] > param.minLevelValue && Number(ask) <= highestValue) {
       distanceToMarket = ((Number(ask) - candle.c) / Number(ask)) * 100;
       if (distanceToMarket < 0) {
-        console.log(candle.c);
+        console.log("ask", distanceToMarket, candle);
       }
       arrayOfAsksLevels.push([ask, candle.asks[ask], distanceToMarket]);
     }
@@ -333,7 +333,7 @@ function prepareLevels(candle) {
     if (candle.bids[bid] > param.minLevelValue && Number(bid) >= lowestValue) {
       distanceToMarket = ((candle.c - Number(bid)) / candle.c) * 100;
       if (distanceToMarket < 0) {
-        console.log(candle.c);
+        console.log("bid", distanceToMarket, candle);
       }
       //console.log(distanceToMarket, candle.c, Number(bid));
       arrayOfBidsLevels.push([bid, candle.bids[bid], distanceToMarket]);
