@@ -165,6 +165,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   order.symbol = param.symbol;
   order.direction = direction;
   if (direction == "SHORT") {
+    return;
     order.openPrice =
       price * (1 - param.distanceToLevel / 100) + param.minSymbolAmount;
     order.stopPrice = price * (1 + param.stopLoss / 100);
@@ -327,6 +328,7 @@ function prepareLevels(candle) {
     processLevel(bid, bidsLevelsHistory, candle.bids);
     if (candle.bids[bid] > param.minLevelValue && Number(bid) >= lowestValue) {
       distanceToMarket = ((candle.c - Number(bid)) / candle.c) * 100;
+      console.log(distanceToMarket);
       arrayOfBidsLevels.push([bid, candle.bids[bid], distanceToMarket]);
     }
   });
