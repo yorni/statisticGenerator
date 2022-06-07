@@ -311,7 +311,9 @@ function prepareLevels(candle) {
   removeUnexistingLevels(candle);
   arrayOfAsksLevels = [];
   arrayOfBidsLevels = [];
-
+  if (candle.c == 0) {
+    console.log(candle.c);
+  }
   highestValue = candle.c * (1 + (param.takeProfit * 2) / 100);
   lowestValue = candle.c * (1 - (param.takeProfit * 2) / 100);
 
