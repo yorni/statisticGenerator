@@ -177,7 +177,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
 
     order.stopPrice = price * (1 + param.stopLoss / 100);
     order.takePrice = order.openPrice * (1 - param.takeProfit / 100);
-    order.timeLevelExistsOnOpen = asksLevelsHistory[priceLevel].timeExists;
+    order.timeLevelExistsOnOpen = bidsLevelsHistory[priceLevel].timeExists;
   } else {
     // order.openPrice =
     //   price * (1 + param.distanceToLevel / 100) - param.minSymbolAmount;
@@ -189,7 +189,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
 
     order.stopPrice = price * (1 - param.stopLoss / 100);
     order.takePrice = order.openPrice * (1 + param.takeProfit / 100);
-    order.timeLevelExistsOnOpen = bidsLevelsHistory[priceLevel].timeExists;
+    order.timeLevelExistsOnOpen = asksLevelsHistory[priceLevel].timeExists;
   }
 
   order.startTime = candle.time;
