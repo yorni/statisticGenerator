@@ -320,6 +320,8 @@ function closeOrder(time, closePrice) {
   );
 
   order = undefined;
+  shortOpenPrice = 0;
+  longOpenPrice = 0;
 }
 
 function prepareLevels(candle) {
