@@ -328,7 +328,7 @@ function prepareLevels(candle) {
     processLevel(bid, bidsLevelsHistory, candle.bids);
     if (candle.bids[bid] > param.minLevelValue && Number(bid) >= lowestValue) {
       distanceToMarket = ((candle.c - Number(bid)) / candle.c) * 100;
-      console.log(distanceToMarket);
+      console.log(distanceToMarket, candle.c, Number(bid));
       arrayOfBidsLevels.push([bid, candle.bids[bid], distanceToMarket]);
     }
   });
