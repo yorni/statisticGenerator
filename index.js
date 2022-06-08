@@ -253,9 +253,12 @@ function closeOrder(time, closePrice) {
   closeFee = (closeSum * param.fee) / 100;
   if (order.direction == "SHORT") {
     profit = openSum - closeSum - openFee - closeFee;
+    inProfit = closeSum - openSum - openFee - closeFee;
+
     commonStatistics.profitShort += profit;
   } else {
     profit = closeSum - openSum - openFee - closeFee;
+    inProfit = openSum - closeSum - openFee - closeFee;
     commonStatistics.profitLong += profit;
   }
   commonStatistics.ordersCount++;
@@ -264,9 +267,11 @@ function closeOrder(time, closePrice) {
   order.openFee = openFee;
   order.closeFee = closeFee;
   order.profit = profit;
+  order.inProfit = inProfit;
   order.finishTime = time;
   order.dealTime = Math.round((order.finishTime - order.startTime) / 1000);
   commonStatistics.profit += profit;
+  commonStatistics.inProfit += inProfit;
   commonStatistics.finalDeposit += profit;
 
   if (profit >= 0) {
@@ -301,6 +306,7 @@ function closeOrder(time, closePrice) {
   }
   console.log(
     commonStatistics.profit,
+    commonStatistics.inProfit,
     order.symbol,
     order.direction,
     order.openPrice,
