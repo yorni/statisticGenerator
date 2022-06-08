@@ -116,16 +116,6 @@ function checkAndOpenOrders(candle) {
   let sellSignal = false;
   let distanceToLevelAsks;
   let distanceToLevelBids;
-  if (!order) {
-    if (longOpenPrice && !shortOpenPrice && longOpenPrice < candle.h) {
-      createOrder(longOpenPrice, levelVolumeAsks, 0, candle, "LONG");
-      longOpenPrice = 0;
-    }
-    if (shortOpenPrice && !longOpenPrice && shortOpenPrice > candle.l) {
-      createOrder(shortOpenPrice, levelVolumeBids, 0, candle, "SHORT");
-      shortOpenPrice = 0;
-    }
-  }
 
   if (!order) {
     if (arrayOfAsksLevels.length) {
@@ -133,9 +123,7 @@ function checkAndOpenOrders(candle) {
       levelVolumeAsks = arrayOfAsksLevels[0][1];
       distanceToLevelAsks = arrayOfAsksLevels[0][2];
       if (distanceToLevelAsks <= param.distanceToLevel) {
-        longOpenPrice = priceAsks + param.minSymbolAmount;
-      } else {
-        longOpenPrice = 0;
+        sellSignal = true;
       }
     }
     if (arrayOfBidsLevels.length) {
@@ -144,10 +132,27 @@ function checkAndOpenOrders(candle) {
       distanceToLevelBids = arrayOfBidsLevels[0][2];
       // console.log(candle.c, arrayOfBidsLevels);
       if (distanceToLevelBids <= param.distanceToLevel) {
-        shortOpenPrice = priceBids - param.minSymbolAmount;
+        buySignal = true;
       }
-    } else {
-      shortOpenPrice = 0;
+    }
+
+    if (sellSignal && !buySignal) {
+      createOrder(
+        priceAsks,
+        levelVolumeAsks,
+        distanceToLevelAsks,
+        candle,
+        "SHORT"
+      );
+    }
+    if (buySignal && !sellSignal) {
+      createOrder(
+        priceBids,
+        levelVolumeBids,
+        distanceToLevelBids,
+        candle,
+        "LONG"
+      );
     }
   }
 }
@@ -168,28 +173,25 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   order.symbol = param.symbol;
   order.direction = direction;
   if (direction == "SHORT") {
-    // order.openPrice =
-    //   price * (1 - param.distanceToLevel / 100) + param.minSymbolAmount;
-    // if (order.openPrice >= price) {
-    //   order.openPrice = price - param.minSymbolAmount;
-    // }
-    order.openPrice = price;
+    order.openPrice =
+      price * (1 - param.distanceToLevel / 100) + param.minSymbolAmount;
+    if (order.openPrice >= price) {
+      order.openPrice = price - param.minSymbolAmount;
+    }
 
-    order.stopPrice = price * (1 + param.stopLoss / 100);
+    order.stopPrice = price + param.minSymbolAmount;
     order.takePrice = order.openPrice * (1 - param.takeProfit / 100);
-    // order.timeLevelExistsOnOpen = bidsLevelsHistory[priceLevel].timeExists;
+    order.timeLevelExistsOnOpen = bidsLevelsHistory[priceLevel].timeExists;
   } else {
-    // order.openPrice =
-    //   price * (1 + param.distanceToLevel / 100) - param.minSymbolAmount;
+    order.openPrice =
+      price * (1 + param.distanceToLevel / 100) - param.minSymbolAmount;
 
-    // if (order.openPrice <= price) {
-    //   order.openPrice = price + param.minSymbolAmount;
-    // }
-    order.openPrice = price;
-
-    order.stopPrice = price * (1 - param.stopLoss / 100);
+    if (order.openPrice <= price) {
+      order.openPrice = price + param.minSymbolAmount;
+    }
+    order.stopPrice = price - param.minSymbolAmount;
     order.takePrice = order.openPrice * (1 + param.takeProfit / 100);
-    // order.timeLevelExistsOnOpen = asksLevelsHistory[priceLevel].timeExists;
+    order.timeLevelExistsOnOpen = asksLevelsHistory[priceLevel].timeExists;
   }
 
   order.startTime = candle.time;
