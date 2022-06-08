@@ -173,8 +173,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   order.symbol = param.symbol;
   order.direction = direction;
   if (direction == "SHORT") {
-    order.openPrice =
-      price * (1 - param.distanceToLevel / 100) + param.minSymbolAmount;
+    order.openPrice = price * (1 - param.distanceToLevel / 100);
     if (order.openPrice >= price) {
       order.openPrice = price - param.minSymbolAmount;
     }
@@ -183,8 +182,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
     order.takePrice = order.openPrice * (1 - param.takeProfit / 100);
     order.timeLevelExistsOnOpen = asksLevelsHistory[priceLevel].timeExists;
   } else {
-    order.openPrice =
-      price * (1 + param.distanceToLevel / 100) - param.minSymbolAmount;
+    order.openPrice = price * (1 + param.distanceToLevel / 100);
 
     if (order.openPrice <= price) {
       order.openPrice = price + param.minSymbolAmount;
