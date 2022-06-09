@@ -171,6 +171,7 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   order = Object.assign({}, deal);
   order.symbol = param.symbol;
   order.direction = direction;
+  order.candleOpen = Object.assign({}, candle);
   if (direction == "SHORT") {
     order.openPrice = price * (1 - param.distanceToLevel / 100);
     if (order.openPrice > price) {
@@ -238,21 +239,21 @@ function processActiveOrders(candle) {
     processCommonOrdersParams(candle);
     if (order.direction == "SHORT") {
       if (order.takePrice >= candle.l) {
-        closeOrder(candle.time, order.takePrice);
+        closeOrder(candle.time, order.takePrice, candle);
       } else if (order.stopPrice <= candle.h) {
-        closeOrder(candle.time, order.stopPrice);
+        closeOrder(candle.time, order.stopPrice, candle);
       }
     } else {
       if (order.takePrice <= candle.h) {
-        closeOrder(candle.time, order.takePrice);
+        closeOrder(candle.time, order.takePrice, candle);
       } else if (order.stopPrice >= candle.l) {
-        closeOrder(candle.time, order.stopPrice);
+        closeOrder(candle.time, order.stopPrice, candle);
       }
     }
   }
 }
 
-function closeOrder(time, closePrice) {
+function closeOrder(time, closePrice, candle) {
   closeSum = order.coinQuantity * closePrice;
   openSum = order.coinQuantity * order.openPrice;
   openFee = (openSum * param.fee) / 100;
@@ -276,6 +277,7 @@ function closeOrder(time, closePrice) {
   order.inProfit = inProfit;
   order.finishTime = time;
   order.dealTime = Math.round((order.finishTime - order.startTime) / 1000);
+  order.candleClose = Object.assign({}, candle);
   commonStatistics.profit += profit;
   commonStatistics.inProfit += inProfit;
   commonStatistics.finalDeposit += profit;
@@ -328,7 +330,9 @@ function closeOrder(time, closePrice) {
     order.finishTime,
     order.dealTime,
     order.timeLevelExistsOnClose,
-    order.levelRemoved
+    order.levelRemoved,
+    order.candleOpen,
+    order.candleClose
   );
 
   order = undefined;

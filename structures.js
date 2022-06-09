@@ -38,6 +38,8 @@ deal = {
   levelRemoved: false,
   biggestLevelTakeX2: 0,
   DistanceToBiggestLevelTakeX2: 0,
+  candleOpen: undefined,
+  candleClose: undefined,
 };
 
 commonStatistics = {
