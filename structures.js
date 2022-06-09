@@ -76,6 +76,7 @@ commonStatistics = {
   maxDeposit: 0,
   minDeposit: 0,
   finalDeposit: 0,
+  finalDepositIn: 0,
 };
 
 module.exports = {

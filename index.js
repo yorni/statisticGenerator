@@ -266,14 +266,13 @@ function closeOrder(time, closePrice, candle) {
   if (order.direction == "SHORT") {
     profit = openSum - closeSum - openFee - closeFee;
     inProfit = closeSum - openSum - openFee - closeFee;
-
     commonStatistics.profitShort += profit;
-    commonStatistics.inProfitShort += inProfit;
+    commonStatistics.inProfitLong += inProfit;
   } else {
     profit = closeSum - openSum - openFee - closeFee;
     inProfit = openSum - closeSum - openFee - closeFee;
     commonStatistics.profitLong += profit;
-    commonStatistics.inProfitLong += inProfit;
+    commonStatistics.inProfitShort += inProfit;
   }
   commonStatistics.ordersCount++;
 
@@ -288,7 +287,7 @@ function closeOrder(time, closePrice, candle) {
   commonStatistics.profit += profit;
   commonStatistics.inProfit += inProfit;
   commonStatistics.finalDeposit += profit;
-
+  commonStatistics.finalDepositIn += inProfit;
   if (profit >= 0) {
     if (order.direction == "SHORT") {
       commonStatistics.profitShortCount++;
@@ -322,7 +321,7 @@ function closeOrder(time, closePrice, candle) {
 
   //////////////////////////////////
   if (inProfit >= 0) {
-    if (order.direction == "SHORT") {
+    if (order.direction == "LONG") {
       commonStatistics.inProfitShortCount++;
       maxUnInProfitShortCount = 0;
     } else {
@@ -332,7 +331,7 @@ function closeOrder(time, closePrice, candle) {
     commonStatistics.inProfitCount++;
     maxUnInProfitCount = 0;
   } else {
-    if (order.direction == "SHORT") {
+    if (order.direction == "LONG") {
       commonStatistics.unInProfitShortCount++;
       maxUnInProfitShortCount++;
       if (maxUnInProfitShortCount > commonStatistics.maxUnInProfitShortCount) {
