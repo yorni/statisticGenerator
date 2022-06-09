@@ -178,10 +178,10 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   order.direction = direction;
   order.candleOpen = Object.assign({}, candle);
   if (direction == "SHORT") {
-    order.openPrice = price * (1 - param.distanceToLevel / 100);
-    if (order.openPrice > price) {
-      order.openPrice = price - param.minSymbolAmount;
-    }
+    order.openPrice = candle.c; // price * (1 - param.distanceToLevel / 100);
+    // if (order.openPrice > price) {
+    //   order.openPrice = price - param.minSymbolAmount;
+    // }
 
     order.stopPrice = price * (1 + param.stopLoss / 100);
     if (order.stopPrice == price) {
@@ -191,11 +191,11 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
 
     order.timeLevelExistsOnOpen = asksLevelsHistory[priceLevel].timeExists;
   } else {
-    order.openPrice = price * (1 + param.distanceToLevel / 100);
+    order.openPrice = candle.c; //price * (1 + param.distanceToLevel / 100);
 
-    if (order.openPrice < price) {
-      order.openPrice = price + param.minSymbolAmount;
-    }
+    // if (order.openPrice < price) {
+    //   order.openPrice = price + param.minSymbolAmount;
+    // }
     order.stopPrice = price * (1 - param.stopLoss / 100);
     if (order.stopPrice == price) {
       order.stopPrice = price - param.minSymbolAmount;
