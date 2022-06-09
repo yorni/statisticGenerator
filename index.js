@@ -347,9 +347,7 @@ function closeOrder(time, closePrice, candle) {
     }
 
     maxUnInProfitCount++;
-    if (
-      maxUnprmaxUnInProfitCountofitCount > commonStatistics.maxUnInProfitCount
-    ) {
+    if (maxUnInProfitCount > commonStatistics.maxUnInProfitCount) {
       commonStatistics.maxUnInProfitCount = maxUnInProfitCount;
     }
   }
