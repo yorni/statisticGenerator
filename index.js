@@ -333,8 +333,10 @@ function closeOrder(time, closePrice, candle) {
     order.dealTime,
     order.timeLevelExistsOnClose,
     order.levelRemoved,
-    order.candleOpen,
-    order.candleClose
+    order.candleOpen.v,
+    order.candleOpen.mv,
+    order.candleClose.v,
+    order.candleClose.mv
   );
 
   order = undefined;
