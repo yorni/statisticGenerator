@@ -130,7 +130,6 @@ function checkAndOpenOrders(candle) {
       priceBids = arrayOfBidsLevels[0][0];
       levelVolumeBids = arrayOfBidsLevels[0][1];
       distanceToLevelBids = arrayOfBidsLevels[0][2];
-      // console.log(candle.c, arrayOfBidsLevels);
       if (distanceToLevelBids <= param.distanceToLevel) {
         buySignal = true;
       }
@@ -175,19 +174,26 @@ function createOrder(priceLevel, volume, distanceToLevel, candle, direction) {
   if (direction == "SHORT") {
     order.openPrice = price * (1 - param.distanceToLevel / 100);
     if (order.openPrice > price) {
-      order.openPrice = price;
+      order.openPrice = price - param.minSymbolAmount;
     }
 
     order.stopPrice = price * (1 + param.stopLoss / 100);
+    if (order.stopPrice == price) {
+      order.stopPrice = price + param.minSymbolAmount;
+    }
     order.takePrice = order.openPrice * (1 - param.takeProfit / 100);
+
     order.timeLevelExistsOnOpen = asksLevelsHistory[priceLevel].timeExists;
   } else {
     order.openPrice = price * (1 + param.distanceToLevel / 100);
 
     if (order.openPrice < price) {
-      order.openPrice = price;
+      order.openPrice = price + param.minSymbolAmount;
     }
     order.stopPrice = price * (1 - param.stopLoss / 100);
+    if (order.stopPrice == price) {
+      order.stopPrice = price - param.minSymbolAmount;
+    }
     order.takePrice = order.openPrice * (1 + param.takeProfit / 100);
     order.timeLevelExistsOnOpen = bidsLevelsHistory[priceLevel].timeExists;
   }
