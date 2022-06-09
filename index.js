@@ -312,6 +312,8 @@ function closeOrder(time, closePrice, candle) {
       commonStatistics.maxUnprofitCount = maxUnprofitCount;
     }
   }
+  delete order.candleOpen.bids;
+  delete order.candleOpen.asks;
   console.log(
     commonStatistics.profit,
     commonStatistics.inProfit,
