@@ -16,6 +16,9 @@ let arrayOfBidsLevels = []; //[[1.01,10,0.1],[1.011,11,0.11]]
 let maxUnprofitLongCount = 0;
 let maxUnprofitShortCount = 0;
 let maxUnprofitCount = 0;
+let maxUnInProfitLongCount = 0;
+let maxUnInProfitShortCount = 0;
+let maxUnInProfitCount = 0;
 let longOpenPrice = 0;
 let shortOpenPrice = 0;
 let levelVolumeAsks;
@@ -61,6 +64,8 @@ function initCommonStatistics() {
   commonStatistics.maxDeposit = param.deposit;
   commonStatistics.minDeposit = param.deposit;
   commonStatistics.finalDeposit = param.deposit;
+  commonStatistics.startTime = param.startTime;
+  commonStatistics.finishTime = param.finishTime;
 }
 async function start() {
   initParameters();
@@ -263,10 +268,12 @@ function closeOrder(time, closePrice, candle) {
     inProfit = closeSum - openSum - openFee - closeFee;
 
     commonStatistics.profitShort += profit;
+    commonStatistics.inProfitShort += inProfit;
   } else {
     profit = closeSum - openSum - openFee - closeFee;
     inProfit = openSum - closeSum - openFee - closeFee;
     commonStatistics.profitLong += profit;
+    commonStatistics.inProfitLong += inProfit;
   }
   commonStatistics.ordersCount++;
 
@@ -312,8 +319,42 @@ function closeOrder(time, closePrice, candle) {
       commonStatistics.maxUnprofitCount = maxUnprofitCount;
     }
   }
-  delete order.candleOpen.bids;
-  delete order.candleOpen.asks;
+
+  //////////////////////////////////
+  if (inProfit >= 0) {
+    if (order.direction == "SHORT") {
+      commonStatistics.inProfitShortCount++;
+      maxUnInProfitShortCount = 0;
+    } else {
+      commonStatistics.inProfitLongCount++;
+      maxUnInProfitLongCount = 0;
+    }
+    commonStatistics.inProfitCount++;
+    maxUnInProfitCount = 0;
+  } else {
+    if (order.direction == "SHORT") {
+      commonStatistics.unInProfitShortCount++;
+      maxUnInProfitShortCount++;
+      if (maxUnInProfitShortCount > commonStatistics.maxUnInProfitShortCount) {
+        commonStatistics.maxUnInProfitShortCount = maxUnInProfitShortCount;
+      }
+    } else {
+      commonStatistics.unInProfitLongCount++;
+      maxUnInProfitLongCount++;
+      if (maxUnInProfitLongCount > commonStatistics.maxUnInProfitLongCount) {
+        commonStatistics.maxUnInProfitLongCount = maxUnInProfitLongCount;
+      }
+    }
+
+    maxUnInProfitCount++;
+    if (
+      maxUnprmaxUnInProfitCountofitCount > commonStatistics.maxUnInProfitCount
+    ) {
+      commonStatistics.maxUnInProfitCount = maxUnInProfitCount;
+    }
+  }
+  //////////////////////////////////
+
   console.log(
     commonStatistics.profit,
     commonStatistics.inProfit,
