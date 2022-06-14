@@ -8,7 +8,7 @@ param = {
   startTime: 1653742291000,
   finishTime: 1653749291000,
   minSymbolAmount: 0.0001,
-  fee: 0.04,
+  fee: 0.0108,
 };
 
 deal = {
