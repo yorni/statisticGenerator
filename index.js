@@ -254,7 +254,6 @@ function processActiveOrders(candle) {
           order.takePrice = newTake;
           order.stopPrice = newStop;
         }
-        console.log("moved down");
       }
     } else {
       if (order.takePrice <= candle.h) {
@@ -267,7 +266,6 @@ function processActiveOrders(candle) {
         if (newTake > order.takePrice) {
           order.takePrice = newTake;
           order.stopPrice = newStop;
-          console.log("moved up");
         }
       }
     }
