@@ -243,12 +243,25 @@ function processActiveOrders(candle) {
   if (order) {
     processCommonOrdersParams(candle);
     if (order.direction == "SHORT") {
+      newTake = candle.c * (1 - param.takeProfit / 100);
+      newStop = candle.c * (1 + param.stopLoss / 100);
+      if (newTake < order.takePrice) {
+        order.takePrice = newTake;
+        order.stopPrice = newStop;
+      }
+
       if (order.takePrice >= candle.l) {
         closeOrder(candle.time, order.takePrice, candle);
       } else if (order.stopPrice <= candle.h) {
         closeOrder(candle.time, order.stopPrice, candle);
       }
     } else {
+      newStop = candle.c * (1 - param.takeProfit / 100);
+      newTake = candle.c * (1 + param.stopLoss / 100);
+      if (newTake > order.takePrice) {
+        order.takePrice = newTake;
+        order.stopPrice = newStop;
+      }
       if (order.takePrice <= candle.h) {
         closeOrder(candle.time, order.takePrice, candle);
       } else if (order.stopPrice >= candle.l) {
